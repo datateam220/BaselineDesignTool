@@ -129,7 +129,4 @@ def validateWattageValue(value):
 			return 'No wattage - REVIEW'
 	except:
 		return 'No wattage - REVIEW'
-	if wattage > 1000:
-		return str(wattage) + ' - REVIEW'
-	else:
-		return wattage
+	return wattage

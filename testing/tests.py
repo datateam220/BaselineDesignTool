@@ -1,5 +1,5 @@
 #tests.py
-import Fixture_Object,Design_Analysis
+from Baseline_Design_Package import Fixture_Object,Design_Analysis
 
 def test_Fixture():
 	'''
@@ -27,7 +27,7 @@ def test_Fixture():
 		elif Fixture_Object.validateWattageValue('100W') != 100:
 			return (False, 'test_validateWattageValue(): 3') 
 		#4: test wattage >400W
-		elif Fixture_Object.validateWattageValue('1000') != '1000 - REVIEW':
+		elif Fixture_Object.validateWattageValue('1000') != 1000:
 			return (False, 'test_validateWattageValue(): 4') 
 		else:
 			return (True, 'test_validateWattageValue()')
@@ -37,7 +37,7 @@ def test_Fixture():
 		nonCH_fixt = Fixture_Object.Fixture(1001,'Decorative', 'HPS', 'Intersection', '90degree',None,None, None, None, '70')
 		normal_fixt = Fixture_Object.Fixture(1002,'CobraHead', 'HPS', 'Intersection', '90degree',None,None, None, None, '70')
 
-		if prev_des_fixt.DESSTAT != 'PREVIOUSLY DESIGNED':
+		if prev_des_fixt.DESSTAT != 'PREVIOUSLY DESIGNED - NO NEW AUTO DESIGN':
 			return  (False, 'test_DESSTAT(): Prev Design')
 		elif nonCH_fixt.DESSTAT != 'NON-COBRAHEAD - NO AUTO DESIGN':
 			return  (False, 'test_DESSTAT(): Non-CH')
@@ -77,12 +77,14 @@ def test_Design_Analysis():
 							   			100 : 'Low',
 							   			150 : 'Medium',
 							   			400 : 'High',
+							   			1000 : 'Very High',
 							   			'Review' : 'REVIEW WATTAGE'
 						   	    },
 						   	    'MH' : {
 						   	    		70 : 'Low',
 						   	    		150 : 'Medium',
 						   	    		200 : 'High',
+						   	    		1000 : 'Very High',
 						   	    		'Review' : 'REVIEW WATTAGE'
 						   	    },
 						   	    'INC' : {
@@ -107,16 +109,18 @@ def test_Design_Analysis():
 					failed_cases[lamp_type] = (wattage,case_result)
 				else:
 					number_passed += 1					
-		if number_passed == 21:
+		if number_passed == 23:
 			return (True, 'test_classifyWattage()')
 		else:
+			print(number_passed)
 			return (False, 'test_classifyWattage() Failed Cases: \n{}'.format([lt + ', '+str(w) for lt,w in failed_cases.iteritems()]))
 
 	def test_classifyDistributionType():
 		test_combinations = {
 							 'Type IV' : ('Cul-de-sacBulb','90degree','Low'),
 							 'Type III' : ('Noneoftheabove', '90degree', 'High'),
-							 'Type II' : ('Intersection', '90degree', 'Low')
+							 'Type II' : ('Intersection', '90degree', 'Low'),
+							 'Type IV' : ('Intersection', '45degree', 'Medium')
 							}
 		failed_cases = []
 		number_passed = 0
@@ -143,8 +147,25 @@ def test_Design_Analysis():
 
 
 Fixture_test_results = test_Fixture()
-print('Passed Tests (Fixture): '+'{}'.format([test for test in Fixture_test_results[0]])[1:-1])
-print('Failed Tests (Fixture): '+'{}'.format([test for test in Fixture_test_results[1]])[1:-1])
+
+if len(Fixture_test_results[0]) > 0:
+	print('Passed Tests (Fixture): '+'{}'.format([test for test in Fixture_test_results[0]])[1:-1])
+else:
+	print("Fixture failed all tests.")
+
+if len(Fixture_test_results[1]) > 0:
+	print('Failed Tests (Fixture): '+'{}'.format([test for test in Fixture_test_results[1]])[1:-1])
+else:
+	print("Fixture passed all tests.")
 
 Design_Analysis_test_results = test_Design_Analysis()
-print(Design_Analysis_test_results)
+
+if len(Design_Analysis_test_results[0]) > 0:
+	print('Passed Tests (Design_Analysis): '+'{}'.format([test for test in Design_Analysis_test_results[0]])[1:-1])
+else:
+	print("Design_Analysis failed all tests.")
+
+if len(Design_Analysis_test_results[1]) > 0:
+	print('Failed Tests (Design_Analysis): '+'{}'.format([test for test in Design_Analysis_test_results[1]])[1:-1])
+else:
+	print("Design_Analysis passed all tests.")
